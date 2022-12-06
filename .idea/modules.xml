@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/courseproject_ui_dd2022.iml" filepath="$PROJECT_DIR$/courseproject_ui_dd2022.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/courseproject_ui_dd2022_android.iml" filepath="$PROJECT_DIR$/android/courseproject_ui_dd2022_android.iml" />
+    </modules>
+  </component>
+</project>
