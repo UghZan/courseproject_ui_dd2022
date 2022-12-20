@@ -1,5 +1,11 @@
-import 'package:courseproject_ui_dd2022/data/clients/api_client.dart';
+import 'dart:io';
 
+import 'package:courseproject_ui_dd2022/data/clients/api_client.dart';
+import 'package:courseproject_ui_dd2022/domain/models/attach_model.dart';
+import 'package:courseproject_ui_dd2022/domain/models/create_models/create_post_model.dart';
+import 'package:courseproject_ui_dd2022/domain/models/create_models/create_user_model.dart';
+
+import '../../domain/models/post_model.dart';
 import '../../domain/models/refresh_token_request.dart';
 import '../../domain/models/user.dart';
 import '../../domain/repository/api_repository.dart';
@@ -32,4 +38,21 @@ class ApiDataRepository extends ApiRepository {
   Future<TokenResponse?> refreshToken({required String token}) async {
     return await _auth.refreshToken(RefreshTokenRequest(token: token));
   }
+
+  @override
+  Future<List<PostModel>> getPosts(int amount, int skip) =>
+      _api.getPosts(amount, skip);
+
+  @override
+  Future addAvatarForUser(AttachModel model) => _api.addAvatarForUser(model);
+
+  @override
+  Future<List<AttachModel>> uploadFiles({required List<File> files}) =>
+      _api.uploadFiles(files: files);
+
+  @override
+  Future createUser(CreateUserModel model) => _auth.createUser(model);
+
+  @override
+  Future createPost(CreatePostModel model) => _api.createPost(model);
 }

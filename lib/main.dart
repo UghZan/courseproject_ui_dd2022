@@ -2,7 +2,11 @@ import 'package:courseproject_ui_dd2022/ui/navigator.dart';
 import 'package:courseproject_ui_dd2022/ui/pages/loader.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'data/service/database.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DB.instance.init();
   runApp(const MyApp());
 }
 

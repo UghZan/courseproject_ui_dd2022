@@ -1,16 +1,17 @@
 import 'package:courseproject_ui_dd2022/ui/pages/app.dart';
 import 'package:courseproject_ui_dd2022/ui/pages/auth.dart';
-import 'package:courseproject_ui_dd2022/ui/pages/profile.dart';
+import 'package:courseproject_ui_dd2022/ui/pages/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:courseproject_ui_dd2022/ui/pages/loader.dart';
 
-import '../domain/models/user.dart';
+import 'pages/post_creation.dart';
 
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
   static const app = "/app";
-  static const profile = "/profile";
+  static const register = "/register";
+  static const postCreate = "/postCreate";
 }
 
 class AppNavigator {
@@ -26,13 +27,17 @@ class AppNavigator {
         ?.pushNamedAndRemoveUntil(NavigationRoutes.auth, ((route) => false));
   }
 
+  static void toRegister() {
+    key.currentState?.pushNamed(NavigationRoutes.register);
+  }
+
+  static void toPostCreation() {
+    key.currentState?.pushNamed(NavigationRoutes.postCreate);
+  }
+
   static void toHome() {
     key.currentState
         ?.pushNamedAndRemoveUntil(NavigationRoutes.app, ((route) => false));
-  }
-
-  static void toProfile(User user) {
-    key.currentState?.pushNamed(NavigationRoutes.profile, arguments: user);
   }
 
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
@@ -46,11 +51,12 @@ class AppNavigator {
       case NavigationRoutes.app:
         return PageRouteBuilder(
             pageBuilder: ((_, __, ___) => MainAppWidget.create()));
-      case NavigationRoutes.profile:
+      case NavigationRoutes.register:
         return PageRouteBuilder(
-            opaque: false,
-            pageBuilder: ((_, __, ___) =>
-                ProfileWidget.create(settings.arguments as User)));
+            pageBuilder: ((_, __, ___) => RegisterWidget.create()));
+      case NavigationRoutes.postCreate:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => PostCreateWidget.create()));
     }
     return null;
   }

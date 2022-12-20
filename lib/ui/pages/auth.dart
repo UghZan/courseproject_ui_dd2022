@@ -1,3 +1,4 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -104,6 +105,10 @@ class AuthWidget extends StatelessWidget {
                           const CircularProgressIndicator(),
                         if (viewModel.state.errorText != null)
                           Text(viewModel.state.errorText!),
+                        const SizedBox(height: 10),
+                        const TextButton(
+                            onPressed: AppNavigator.toRegister,
+                            child: Text("Register"))
                       ]),
                 ))));
   }

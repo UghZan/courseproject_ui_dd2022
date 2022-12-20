@@ -1,13 +1,16 @@
 import 'dart:io';
+import 'package:courseproject_ui_dd2022/domain/models/create_models/create_user_model.dart';
 import 'package:courseproject_ui_dd2022/internal/shared_prefs.dart';
 import 'package:dio/dio.dart';
 
 import '../../domain/repository/api_repository.dart';
 import '../../internal/dependencies/repository_module.dart';
 import '../../internal/token_storage.dart';
+import 'data_service.dart';
 
 class AuthService {
   final ApiRepository _api = RepositoryModule.apiRepository();
+  final DataService _dataService = DataService();
 
   Future auth(String? login, String? password) async {
     if (login != null && password != null) {
@@ -16,6 +19,8 @@ class AuthService {
         if (token != null) {
           await TokenStorage.setStoredToken(token);
           var user = await _api.getCurrentUser();
+          var prevUser = await SharedPrefs.getStoredUser();
+          if (user?.id != prevUser?.id) _dataService.clearDB();
           if (user != null) {
             SharedPrefs.setStoredUser(user);
           }
@@ -25,7 +30,7 @@ class AuthService {
           throw NoNetworkException();
         } else if (<int>[401, 406].contains(e.response?.statusCode)) {
           throw WrongCredentionalException();
-        } else if (<int>[500].contains(e.response?.statusCode)) {
+        } else if (e.response?.statusCode == 500) {
           throw ServerException();
         }
       }
@@ -33,16 +38,30 @@ class AuthService {
   }
 
   Future<bool> checkAuth() async {
-    return ((await TokenStorage.getAccessToken()) != null) &&
-        ((await SharedPrefs.getStoredUser()) != null);
+    var res = false;
+
+    if (await TokenStorage.getAccessToken() != null) {
+      var user = await _api.getCurrentUser();
+      if (user != null) {
+        await SharedPrefs.setStoredUser(user);
+        await _dataService.createOrUpdateUser(user);
+      }
+
+      res = true;
+    }
+
+    return res;
   }
 
-  Future<bool> tryGetUser() async {
+  void createUser(CreateUserModel model) async {
     try {
-      var user = await _api.getCurrentUser();
-      return true;
-    } catch (e) {
-      return false;
+      _api.createUser(model);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        throw NoNetworkException();
+      } else if (e.response?.statusCode == 409) {
+        throw UserAlreadyExists();
+      }
     }
   }
 
@@ -56,3 +75,5 @@ class WrongCredentionalException implements Exception {}
 class NoNetworkException implements Exception {}
 
 class ServerException implements Exception {}
+
+class UserAlreadyExists implements Exception {}
