@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/service/data_service.dart';
-import '../../../data/service/database.dart';
 import '../../../data/service/sync_service.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/app_config.dart';

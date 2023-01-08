@@ -16,20 +16,6 @@ class HomeViewModel extends ChangeNotifier {
   BuildContext context;
   HomeViewModel({required this.context}) {
     asyncInit();
-    _scrollListController.addListener(() {
-      var max = _scrollListController.position.maxScrollExtent;
-      var current = _scrollListController.offset;
-      var percent = (current / max * 100);
-      if (percent > 80) {
-        if (!isLoading) {
-          isLoading = true;
-          Future.delayed(const Duration(seconds: 1)).then((value) {
-            posts = <PostModel>[...posts!, ...posts!];
-            isLoading = false;
-          });
-        }
-      }
-    });
   }
 
   final _dataService = DataService();
