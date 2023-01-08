@@ -39,6 +39,7 @@ class _ViewModel extends ChangeNotifier {
         postContent: postContent!, postAttachments: attachments);
     isCreating = true;
     await _api.createPost(newPost).then((value) {
+      FocusScope.of(context).unfocus();
       appViewModel.selectTab(TabItemEnum.home);
       appViewModel.msg = "New post successfully created";
     });

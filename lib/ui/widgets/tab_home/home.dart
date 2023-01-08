@@ -77,9 +77,11 @@ class HomeWidget extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(actions: [
-          IconButton(
-              onPressed: viewModel.refresh,
-              icon: const Icon(Icons.refresh_outlined))
+          viewModel.isLoading
+              ? const CircularProgressIndicator()
+              : IconButton(
+                  onPressed: viewModel.refresh,
+                  icon: const Icon(Icons.refresh_outlined))
         ]),
         body: viewModel.isLoading
             ? const Center(

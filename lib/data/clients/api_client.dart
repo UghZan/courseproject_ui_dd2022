@@ -20,7 +20,7 @@ abstract class ApiClient {
   @GET("/api/User/GetCurrentUser")
   Future<User?> getCurrentUser();
 
-  @GET("/api/Post/GetCurrentUserPosts")
+  @GET("/api/Post/GetPosts")
   Future<List<PostModel>> getPosts(
       @Query("amount") int amount, @Query("startingFrom") int skip);
 

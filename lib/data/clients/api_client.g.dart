@@ -61,7 +61,7 @@ class _ApiClient implements ApiClient {
     )
             .compose(
               _dio.options,
-              '/api/Post/GetCurrentUserPosts',
+              '/api/Post/GetPosts',
               queryParameters: queryParameters,
               data: _data,
             )
