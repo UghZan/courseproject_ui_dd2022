@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/service/data_service.dart';
+import '../../../data/service/database.dart';
 import '../../../data/service/sync_service.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/app_config.dart';
@@ -133,7 +134,7 @@ class PostDetailed extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ReactButton(key, post),
+                            ReactButtonWidget.create(context, post),
                             Row(children: [
                               Text(post.commentsCount.toString()),
                               IconButton(
@@ -196,8 +197,7 @@ class PostDetailed extends StatelessWidget {
   }
 
   static create(Object? arg) {
-    PostModel? post;
-    if (arg != null && arg is PostModel) post = arg;
+    PostModel? post = arg as PostModel;
     return ChangeNotifierProvider(
       create: (BuildContext context) =>
           _ViewModel(context: context, post: post),

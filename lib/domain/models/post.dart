@@ -38,7 +38,8 @@ class Post implements DbModel {
       String? authorId,
       String? creationDate,
       int? reactionsCount,
-      int? commentsCount}) {
+      int? commentsCount,
+      int? userReaction}) {
     return Post(
         id: id ?? this.id,
         postContent: postContent ?? this.postContent,

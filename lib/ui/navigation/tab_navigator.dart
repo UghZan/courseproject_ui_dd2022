@@ -3,7 +3,6 @@ import 'package:courseproject_ui_dd2022/ui/widgets/tab_home/post_detailed.dart';
 import 'package:courseproject_ui_dd2022/ui/widgets/tab_profile/profile.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/models/post_model.dart';
 import '../../domain/models/user.dart';
 
 class TabNavigatorRoutes {
@@ -27,8 +26,7 @@ class TabNavigator extends StatelessWidget {
             SafeArea(
               child: Text(thisTab.name),
             ),
-        TabNavigatorRoutes.postDetails: (context) =>
-            PostDetailed.create(arg as PostModel),
+        TabNavigatorRoutes.postDetails: (context) => PostDetailed.create(arg),
         TabNavigatorRoutes.userProfile: (context) =>
             ProfileWidget.create(arg as User),
       };

@@ -1,13 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'package:courseproject_ui_dd2022/domain/enums/tab_item.dart';
+import 'package:courseproject_ui_dd2022/internal/utils.dart';
 import 'package:courseproject_ui_dd2022/ui/navigation/app_navigator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
 import '../../domain/models/user.dart';
-import '../../internal/app_config.dart';
 import '../../internal/shared_prefs.dart';
 import '../navigation/tab_navigator.dart';
 import 'common/bottom_tab.dart';
@@ -64,13 +63,7 @@ class AppViewModel extends ChangeNotifier {
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
     if (user!.linkToAvatar != null) {
-      var img =
-          await NetworkAssetBundle(Uri.parse("$baseUrl${user!.linkToAvatar}"))
-              .load("$baseUrl${user!.linkToAvatar}?v=1");
-      avatar = Image.memory(
-        img.buffer.asUint8List(),
-        fit: BoxFit.fill,
-      );
+      avatar = Image(image: Utils.getAvatar(user!)!);
     }
   }
 

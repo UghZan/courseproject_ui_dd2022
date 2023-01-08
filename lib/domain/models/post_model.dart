@@ -16,15 +16,14 @@ class PostModel {
   int reactionsCount;
   int commentsCount;
 
-  PostModel({
-    required this.id,
-    this.postContent,
-    required this.postAttachments,
-    required this.author,
-    required this.creationDate,
-    required this.reactionsCount,
-    required this.commentsCount,
-  });
+  PostModel(
+      {required this.id,
+      this.postContent,
+      required this.postAttachments,
+      required this.author,
+      required this.creationDate,
+      required this.reactionsCount,
+      required this.commentsCount});
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>
       _$PostModelFromJson(json);

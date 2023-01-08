@@ -32,7 +32,6 @@ class HomeViewModel extends ChangeNotifier {
     });
   }
 
-  //final _authService = AuthService();
   final _dataService = DataService();
   final _scrollListController = ScrollController();
   bool _isLoading = false;
@@ -59,8 +58,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void asyncInit() async {
-    await SyncService().syncPosts();
-    posts = await _dataService.getPosts();
+    refresh();
   }
 
   void refresh() async {
@@ -71,12 +69,14 @@ class HomeViewModel extends ChangeNotifier {
 
   void toUserProfile(User profileUser) {
     Navigator.of(context)
-        .pushNamed(TabNavigatorRoutes.userProfile, arguments: profileUser);
+        .pushNamed(TabNavigatorRoutes.userProfile, arguments: profileUser)
+        .then((value) => refresh());
   }
 
   void toPostDetails(PostModel post) {
     Navigator.of(context)
-        .pushNamed(TabNavigatorRoutes.postDetails, arguments: post);
+        .pushNamed(TabNavigatorRoutes.postDetails, arguments: post)
+        .then((value) => refresh());
   }
 }
 
@@ -95,7 +95,7 @@ class HomeWidget extends StatelessWidget {
               onPressed: viewModel.refresh,
               icon: const Icon(Icons.refresh_outlined))
         ]),
-        body: viewModel.posts == null
+        body: viewModel.isLoading
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -170,7 +170,8 @@ class HomeWidget extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            ReactButton(key, thisPost),
+                                            ReactButtonWidget.create(
+                                                context, thisPost),
                                             Row(children: [
                                               Text(thisPost.commentsCount
                                                   .toString()),
