@@ -1,12 +1,12 @@
-import 'package:courseproject_ui_dd2022/ui/navigator.dart';
-import 'package:courseproject_ui_dd2022/ui/pages/loader.dart';
+import 'package:courseproject_ui_dd2022/ui/navigation/app_navigator.dart';
+import 'package:courseproject_ui_dd2022/ui/widgets/common/loader.dart';
 import 'package:flutter/material.dart';
 
-import 'data/service/database.dart';
+import 'internal/init_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DB.instance.init();
+  await initApp();
   runApp(const MyApp());
 }
 

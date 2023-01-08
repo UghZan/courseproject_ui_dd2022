@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 import '../../data/service/auth_service.dart';
 import '../../domain/models/refresh_token_request.dart';
-import '../../ui/navigator.dart';
+import '../../ui/navigation/app_navigator.dart';
 import '../app_config.dart';
 
 class ApiModule {

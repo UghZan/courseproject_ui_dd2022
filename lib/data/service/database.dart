@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:uuid/uuid.dart';
 
+import '../../domain/models/comment.dart';
 import '../../domain/models/post.dart';
 import '../../domain/models/post_photo.dart';
 import '../../domain/models/user.dart';
@@ -17,7 +18,7 @@ class DB {
   Future init() async {
     if (!_initialized) {
       var databasePath = await getDatabasesPath();
-      var path = join(databasePath, "db_v1.0.2.2.db");
+      var path = join(databasePath, "db_v1.0.3.db");
 
       _db = await openDatabase(path, version: 1, onCreate: _createDB);
       _initialized = true;
@@ -33,22 +34,29 @@ class DB {
     });
   }
 
-  Future deleteDB() async {
-    await deleteDatabase(_db.path);
-    _initialized = false;
+  Future clearDB() async {
+    _clearTable("t_User");
+    _clearTable("t_Post");
+    _clearTable("t_PostPhoto");
+    _clearTable("t_Comment");
+  }
+
+  Future _clearTable(String name) async {
+    _db.delete(name);
   }
 
   static final _factories = <Type, Function(Map<String, dynamic> map)>{
     User: (map) => User.fromMap(map),
     Post: (map) => Post.fromMap(map),
     PostPhoto: (map) => PostPhoto.fromMap(map),
+    Comment: (map) => Comment.fromMap(map)
   };
 
   String _dbName(Type type) {
     if (type == DbModel) {
       throw Exception("A specific type is required");
     }
-    return "t_" + (type).toString();
+    return "t_$type";
   }
 
   Future<Iterable<T>> getAll<T extends DbModel>(
@@ -111,7 +119,7 @@ class DB {
     return await res;
   }
 
-  Future inserRange<T extends DbModel>(Iterable<T> values) async {
+  Future insertRange<T extends DbModel>(Iterable<T> values) async {
     var batch = _db.batch();
     for (var row in values) {
       var data = row.toMap();

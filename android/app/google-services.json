@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "75485158803",
+    "project_id": "ddstudy2022-zndrmstr",
+    "storage_bucket": "ddstudy2022-zndrmstr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75485158803:android:01fcc953fa4866d7f15c66",
+        "android_client_info": {
+          "package_name": "com.example.courseproject_ui_dd2022"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75485158803-shls4tpkhphkklcdu1m6rf5nhmrpu4lm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxYd3roFp3ZCHFDomQuiikz5_Ra0KNMFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75485158803-shls4tpkhphkklcdu1m6rf5nhmrpu4lm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "75485158803-fhaqmgusud4m4secq74smo5eelt102o6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.courseprojectUiDd2022"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

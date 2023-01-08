@@ -20,7 +20,10 @@ class AuthService {
           await TokenStorage.setStoredToken(token);
           var user = await _api.getCurrentUser();
           var prevUser = await SharedPrefs.getStoredUser();
-          if (user?.id != prevUser?.id) _dataService.clearDB();
+          if (user?.id != prevUser?.id) {
+            _dataService.clearDB();
+          }
+
           if (user != null) {
             SharedPrefs.setStoredUser(user);
           }

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:courseproject_ui_dd2022/data/clients/api_client.dart';
 import 'package:courseproject_ui_dd2022/domain/models/attach_model.dart';
+import 'package:courseproject_ui_dd2022/domain/models/create_models/create_comment_model.dart';
+import 'package:courseproject_ui_dd2022/domain/models/comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_post_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_user_model.dart';
 
@@ -55,4 +57,12 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future createPost(CreatePostModel model) => _api.createPost(model);
+
+  @override
+  Future createComment(String postId, CreateCommentModel model) =>
+      _api.createComment(postId, model);
+
+  @override
+  Future<List<CommentModel>> getPostComments(String postId) =>
+      _api.getPostComments(postId);
 }

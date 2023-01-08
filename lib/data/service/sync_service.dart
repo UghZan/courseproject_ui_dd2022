@@ -1,3 +1,4 @@
+import '../../domain/models/comment.dart';
 import '../../domain/models/post.dart';
 import '../../internal/dependencies/repository_module.dart';
 import 'data_service.dart';
@@ -7,6 +8,8 @@ class SyncService {
   final _dataService = DataService();
 
   Future syncPosts() async {
+    _dataService.clearDB();
+
     var postModels = await _api.getPosts(100, 0);
     var authors = postModels.map((e) => e.author).toSet();
     var postAttachments = postModels
@@ -19,5 +22,15 @@ class SyncService {
     await _dataService.rangeUpdateEntities(authors);
     await _dataService.rangeUpdateEntities(posts);
     await _dataService.rangeUpdateEntities(postAttachments);
+  }
+
+  Future syncCommentsOnPost(String postId) async {
+    var commentModels = await _api.getPostComments(postId);
+    var authors = commentModels.map((e) => e.author).toSet();
+    var comments = commentModels.map(
+        (e) => Comment.fromJson(e.toJson()).copyWith(authorId: e.author.id));
+
+    await _dataService.rangeUpdateEntities(authors);
+    await _dataService.rangeUpdateEntities(comments);
   }
 }

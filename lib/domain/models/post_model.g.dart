@@ -14,6 +14,8 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
           .toList(),
       author: User.fromJson(json['author'] as Map<String, dynamic>),
       creationDate: json['creationDate'] as String,
+      reactionsCount: json['reactionsCount'] as int,
+      commentsCount: json['commentsCount'] as int,
     );
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
@@ -22,4 +24,6 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'postAttachments': instance.postAttachments,
       'author': instance.author,
       'creationDate': instance.creationDate,
+      'reactionsCount': instance.reactionsCount,
+      'commentsCount': instance.commentsCount,
     };

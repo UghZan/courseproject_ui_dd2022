@@ -48,6 +48,8 @@ dependencies:
   json_annotation: ^4.7.0
   camera: 
   image_picker:
+  firebase_core: 
+  firebase_messaging: 
 
 dev_dependencies:
   flutter_test:

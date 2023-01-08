@@ -3,10 +3,10 @@
 import 'package:courseproject_ui_dd2022/domain/db_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'post.g.dart';
+part 'comment.g.dart';
 
 @JsonSerializable()
-class Post implements DbModel {
+class Comment implements DbModel {
   @override
   final String id;
   final String postContent;
@@ -15,7 +15,7 @@ class Post implements DbModel {
   final int reactionsCount;
   final int commentsCount;
 
-  Post(
+  Comment(
       {required this.id,
       required this.postContent,
       this.authorId,
@@ -23,23 +23,24 @@ class Post implements DbModel {
       required this.reactionsCount,
       required this.commentsCount});
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  factory Comment.fromJson(Map<String, dynamic> json) =>
+      _$CommentFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PostToJson(this);
+  Map<String, dynamic> toJson() => _$CommentToJson(this);
 
   @override
-  Map<String, dynamic> toMap() => _$PostToJson(this);
+  Map<String, dynamic> toMap() => _$CommentToJson(this);
 
-  factory Post.fromMap(Map<String, dynamic> map) => _$PostFromJson(map);
+  factory Comment.fromMap(Map<String, dynamic> map) => _$CommentFromJson(map);
 
-  Post copyWith(
+  Comment copyWith(
       {String? id,
       String? postContent,
       String? authorId,
       String? creationDate,
       int? reactionsCount,
       int? commentsCount}) {
-    return Post(
+    return Comment(
         id: id ?? this.id,
         postContent: postContent ?? this.postContent,
         authorId: authorId ?? this.authorId,

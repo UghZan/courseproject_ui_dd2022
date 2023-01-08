@@ -11,6 +11,16 @@ CREATE TABLE t_Post(
     ,authorId           TEXT NOT NULL
     ,creationDate         TEXT
     ,FOREIGN KEY(authorId) REFERENCES t_User(id)
+    ,reactionsCount     INTEGER
+    ,commentsCount      INTEGER
+);
+CREATE TABLE t_Comment(
+    id                  TEXT NOT NULL PRIMARY KEY
+    ,postContent        TEXT
+    ,authorId           TEXT NOT NULL
+    ,creationDate         TEXT
+    ,FOREIGN KEY(authorId) REFERENCES t_User(id)
+    ,reactionsCount     INTEGER
 );
 CREATE TABLE t_PostPhoto(
     id                  TEXT NOT NULL PRIMARY KEY

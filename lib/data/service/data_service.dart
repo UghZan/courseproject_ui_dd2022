@@ -15,7 +15,7 @@ class DataService {
   }
 
   Future clearDB() async {
-    await DB.instance.deleteDB();
+    await DB.instance.clearDB();
   }
 
   Future<List<PostModel>> getPosts() async {
@@ -32,7 +32,9 @@ class DataService {
             author: author,
             postAttachments: attachs,
             postContent: post.postContent,
-            creationDate: post.creationDate));
+            creationDate: post.creationDate,
+            reactionsCount: post.reactionsCount,
+            commentsCount: post.commentsCount));
       }
     }
 
