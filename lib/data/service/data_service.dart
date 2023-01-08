@@ -1,4 +1,7 @@
+import 'package:courseproject_ui_dd2022/domain/models/comment_model.dart';
+
 import '../../domain/db_model.dart';
+import '../../domain/models/comment.dart';
 import '../../domain/models/post.dart';
 import '../../domain/models/post_photo.dart';
 import '../../domain/models/post_model.dart';
@@ -35,6 +38,27 @@ class DataService {
             creationDate: post.creationDate,
             reactionsCount: post.reactionsCount,
             commentsCount: post.commentsCount));
+      }
+    }
+
+    return res;
+  }
+
+  Future<List<CommentModel>> getCommentsForPost(String postId) async {
+    var res = <CommentModel>[];
+    var comments =
+        (await DB.instance.getAll<Comment>(whereMap: {"postId": postId}))
+            .toList();
+    for (var comment in comments) {
+      var author = await DB.instance.get<User>(comment.authorId);
+      if (author != null) {
+        res.add(CommentModel(
+            id: comment.id,
+            author: author,
+            postContent: comment.postContent,
+            creationDate: comment.creationDate,
+            reactionsCount: comment.reactionsCount,
+            postId: comment.postId));
       }
     }
 

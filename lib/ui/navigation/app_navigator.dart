@@ -1,7 +1,7 @@
 import 'package:courseproject_ui_dd2022/ui/widgets/auth/register.dart';
 import 'package:flutter/cupertino.dart';
 import '../../domain/enums/tab_item.dart';
-import '../widgets/common/loader.dart';
+import '../widgets/loader.dart';
 import '../widgets/app.dart';
 import '../widgets/auth/auth.dart';
 

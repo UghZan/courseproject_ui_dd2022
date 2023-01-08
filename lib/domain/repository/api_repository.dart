@@ -6,6 +6,7 @@ import 'package:courseproject_ui_dd2022/domain/models/create_models/create_user_
 import '../models/attach_model.dart';
 import '../models/comment_model.dart';
 import '../models/create_models/create_comment_model.dart';
+import '../models/create_models/create_reaction_model.dart';
 import '../models/post_model.dart';
 import '../models/token_response.dart';
 import '../models/user.dart';
@@ -27,4 +28,10 @@ abstract class ApiRepository {
   Future createComment(String postId, CreateCommentModel model);
 
   Future<List<CommentModel>> getPostComments(String postId);
+
+  Future createReactionOnPost(String postId, CreateReactionModel model);
+
+  Future<int> getUserReactionOnPost(String postId);
+
+  Future removeReactionFromPost(String postId);
 }

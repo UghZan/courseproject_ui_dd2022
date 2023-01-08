@@ -9,18 +9,20 @@ CREATE TABLE t_Post(
     id                  TEXT NOT NULL PRIMARY KEY
     ,postContent        TEXT
     ,authorId           TEXT NOT NULL
-    ,creationDate         TEXT
+    ,creationDate       TEXT
+    ,reactionsCount     INTEGER DEFAULT 0
+    ,commentsCount      INTEGER DEFAULT 0
     ,FOREIGN KEY(authorId) REFERENCES t_User(id)
-    ,reactionsCount     INTEGER
-    ,commentsCount      INTEGER
 );
 CREATE TABLE t_Comment(
     id                  TEXT NOT NULL PRIMARY KEY
     ,postContent        TEXT
     ,authorId           TEXT NOT NULL
-    ,creationDate         TEXT
+    ,creationDate       TEXT
+    ,reactionsCount     INTEGER DEFAULT 0
+    ,postId             TEXT
     ,FOREIGN KEY(authorId) REFERENCES t_User(id)
-    ,reactionsCount     INTEGER
+    ,FOREIGN KEY(postId) REFERENCES t_Post(id)
 );
 CREATE TABLE t_PostPhoto(
     id                  TEXT NOT NULL PRIMARY KEY
@@ -28,5 +30,5 @@ CREATE TABLE t_PostPhoto(
     ,mimeType           TEXT
     ,[url]              TEXT
     ,postId             TEXT
-    ,FOREIGN KEY(postId) REFERENCES t_User(id)
+    ,FOREIGN KEY(postId) REFERENCES t_Post(id)
 );

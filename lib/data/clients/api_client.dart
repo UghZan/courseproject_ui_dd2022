@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:courseproject_ui_dd2022/domain/models/comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_post_model.dart';
+import 'package:courseproject_ui_dd2022/domain/models/create_models/create_reaction_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
@@ -34,8 +35,19 @@ abstract class ApiClient {
   Future createPost(@Body() CreatePostModel model);
 
   @POST("/api/Post/CreateCommentOnPost")
-  Future createComment(String postId, @Body() CreateCommentModel model);
+  Future createComment(
+      @Query("postId") String postId, @Body() CreateCommentModel model);
 
-  @POST("/api/Post/GetPostComments")
-  Future<List<CommentModel>> getPostComments(String postId);
+  @GET("/api/Post/GetPostComments")
+  Future<List<CommentModel>> getPostComments(@Query("postId") String postId);
+
+  @POST("/api/Post/CreateReactionOnPost")
+  Future createReactionOnPost(
+      @Query("postId") String postId, @Body() CreateReactionModel model);
+
+  @GET("/api/Post/GetCurrentUserPostReaction")
+  Future<int> getUserReactionOnPost(@Query("postId") String postId);
+
+  @DELETE("/api/Post/RemoveReactionFromPost")
+  Future removeReactionFromPost(@Query("postId") String postId);
 }

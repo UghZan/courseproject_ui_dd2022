@@ -12,6 +12,7 @@ CommentModel _$CommentModelFromJson(Map<String, dynamic> json) => CommentModel(
       author: User.fromJson(json['author'] as Map<String, dynamic>),
       creationDate: json['creationDate'] as String,
       reactionsCount: json['reactionsCount'] as int,
+      postId: json['postId'] as String?,
     );
 
 Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
       'author': instance.author,
       'creationDate': instance.creationDate,
       'reactionsCount': instance.reactionsCount,
+      'postId': instance.postId,
     };

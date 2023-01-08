@@ -1,5 +1,5 @@
 import 'package:courseproject_ui_dd2022/ui/navigation/app_navigator.dart';
-import 'package:courseproject_ui_dd2022/ui/widgets/common/loader.dart';
+import 'package:courseproject_ui_dd2022/ui/widgets/loader.dart';
 import 'package:flutter/material.dart';
 
 import 'internal/init_app.dart';

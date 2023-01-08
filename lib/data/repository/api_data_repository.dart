@@ -7,6 +7,7 @@ import 'package:courseproject_ui_dd2022/domain/models/comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_post_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_user_model.dart';
 
+import '../../domain/models/create_models/create_reaction_model.dart';
 import '../../domain/models/post_model.dart';
 import '../../domain/models/refresh_token_request.dart';
 import '../../domain/models/user.dart';
@@ -65,4 +66,16 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future<List<CommentModel>> getPostComments(String postId) =>
       _api.getPostComments(postId);
+
+  @override
+  Future createReactionOnPost(String postId, CreateReactionModel model) =>
+      _api.createReactionOnPost(postId, model);
+
+  @override
+  Future<int> getUserReactionOnPost(String postId) =>
+      _api.getUserReactionOnPost(postId);
+
+  @override
+  Future removeReactionFromPost(String postId) =>
+      _api.removeReactionFromPost(postId);
 }

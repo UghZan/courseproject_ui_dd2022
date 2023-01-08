@@ -24,11 +24,11 @@ class SyncService {
     await _dataService.rangeUpdateEntities(postAttachments);
   }
 
-  Future syncCommentsOnPost(String postId) async {
-    var commentModels = await _api.getPostComments(postId);
+  Future syncCommentsOnPost(String post) async {
+    var commentModels = await _api.getPostComments(post);
     var authors = commentModels.map((e) => e.author).toSet();
-    var comments = commentModels.map(
-        (e) => Comment.fromJson(e.toJson()).copyWith(authorId: e.author.id));
+    var comments = commentModels.map((e) => Comment.fromJson(e.toJson())
+        .copyWith(authorId: e.author.id, postId: post));
 
     await _dataService.rangeUpdateEntities(authors);
     await _dataService.rangeUpdateEntities(comments);

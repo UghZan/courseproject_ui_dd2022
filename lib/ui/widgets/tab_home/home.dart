@@ -2,10 +2,10 @@
 
 import 'package:courseproject_ui_dd2022/data/service/data_service.dart';
 import 'package:courseproject_ui_dd2022/data/service/sync_service.dart';
+import 'package:courseproject_ui_dd2022/ui/widgets/common/react_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//import '../../../data/service/auth_service.dart';
 import '../../../domain/models/post_model.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/app_config.dart';
@@ -170,15 +170,16 @@ class HomeWidget extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            IconButton(
-                                              icon: const Icon(Icons.favorite),
-                                              onPressed: () {},
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(Icons.comment),
-                                              onPressed: () => viewModel
-                                                  .toPostDetails(thisPost),
-                                            ),
+                                            ReactButton(key, thisPost),
+                                            Row(children: [
+                                              Text(thisPost.commentsCount
+                                                  .toString()),
+                                              IconButton(
+                                                icon: const Icon(Icons.comment),
+                                                onPressed: () => viewModel
+                                                    .toPostDetails(thisPost),
+                                              ),
+                                            ]),
                                           ])
                                     ]));
                           } else {

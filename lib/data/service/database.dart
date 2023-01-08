@@ -18,7 +18,7 @@ class DB {
   Future init() async {
     if (!_initialized) {
       var databasePath = await getDatabasesPath();
-      var path = join(databasePath, "db_v1.0.3.db");
+      var path = join(databasePath, "db_v1.0.3.2.db");
 
       _db = await openDatabase(path, version: 1, onCreate: _createDB);
       _initialized = true;
@@ -42,7 +42,9 @@ class DB {
   }
 
   Future _clearTable(String name) async {
-    _db.delete(name);
+    var tableExists =
+        await _db.query('sqlite_master', where: 'name = ?', whereArgs: [name]);
+    if (tableExists != []) _db.delete(name);
   }
 
   static final _factories = <Type, Function(Map<String, dynamic> map)>{

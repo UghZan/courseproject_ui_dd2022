@@ -25,6 +25,7 @@ class AppViewModel extends ChangeNotifier {
     if (tabItemEnum == _currentTab) {
       AppNavigator.tabNavKeys[tabItemEnum]!.currentState!
           .popUntil((route) => route.isFirst);
+      notifyListeners();
     } else {
       prevTab = _currentTab;
       _currentTab = tabItemEnum;

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/service/auth_service.dart';
-import '../navigator.dart';
+import '../navigation/app_navigator.dart';
 
 class _ViewModel extends ChangeNotifier {
   final _authService = AuthService();

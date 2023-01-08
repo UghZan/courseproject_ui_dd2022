@@ -81,6 +81,13 @@ flutter:
   assets:
   -     assets/db_init.sql
   -     images/no_avatar.png
+  -     images/reaction_like.png
+  -     images/reaction_dislike.png
+  -     images/reaction_heart.png
+  -     images/reaction_laugh.png
+  -     images/reaction_angry.png
+  -     images/reaction_sad.png
+  -     images/reaction_woah.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

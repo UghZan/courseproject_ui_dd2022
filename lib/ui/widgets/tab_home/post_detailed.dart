@@ -1,10 +1,16 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:courseproject_ui_dd2022/domain/models/comment_model.dart';
+import 'package:courseproject_ui_dd2022/domain/models/create_models/create_comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/post_model.dart';
+import 'package:courseproject_ui_dd2022/ui/widgets/common/react_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/service/data_service.dart';
+import '../../../data/service/sync_service.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/app_config.dart';
+import '../../../internal/dependencies/repository_module.dart';
 import '../../../internal/utils.dart';
 import '../../navigation/tab_navigator.dart';
 import 'home.dart';
@@ -12,11 +18,12 @@ import 'home.dart';
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
   final PostModel? post;
-  _ViewModel({required this.context, required this.post});
-
-  void toUserProfile(User profileUser) {
-    Navigator.of(context)
-        .pushNamed(TabNavigatorRoutes.userProfile, arguments: profileUser);
+  final _api = RepositoryModule.apiRepository();
+  _ViewModel({required this.context, required this.post}) {
+    commentController.addListener(() {
+      comment = commentController.text;
+    });
+    asyncInit();
   }
 
   int _pageIndex = 0;
@@ -28,6 +35,43 @@ class _ViewModel extends ChangeNotifier {
   int get pageIndex => _pageIndex;
 
   Map<String, String>? headers;
+  Map<int, int> pager = <int, int>{};
+
+  void onPageChanged(int listIndex, int pageIndex) {
+    pager[listIndex] = pageIndex;
+    notifyListeners();
+  }
+
+  void toUserProfile(User profileUser) {
+    Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.userProfile, arguments: profileUser);
+  }
+
+  String? comment;
+  TextEditingController commentController = TextEditingController();
+
+  List<CommentModel>? _comments;
+  List<CommentModel>? get comments => _comments;
+  set comments(List<CommentModel>? val) {
+    _comments = val;
+    notifyListeners();
+  }
+
+  void createComment() async {
+    var newComment = CreateCommentModel(postContent: comment!);
+    commentController.text = "";
+    FocusScope.of(context).unfocus();
+    await _api.createComment(post!.id, newComment).then((value) async {
+      post!.commentsCount++;
+      await SyncService().syncPosts();
+      asyncInit();
+    });
+  }
+
+  void asyncInit() async {
+    await SyncService().syncCommentsOnPost(post!.id);
+    comments = await DataService().getCommentsForPost(post!.id);
+  }
 }
 
 class PostDetailed extends StatelessWidget {
@@ -42,7 +86,6 @@ class PostDetailed extends StatelessWidget {
         : SafeArea(
             child: Container(
                 color: Colors.grey,
-                padding: const EdgeInsets.all(2),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,13 +133,7 @@ class PostDetailed extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(children: [
-                              IconButton(
-                                icon: const Icon(Icons.favorite),
-                                onPressed: () {},
-                              ),
-                              Text(post.reactionsCount.toString())
-                            ]),
+                            ReactButton(key, post),
                             Row(children: [
                               Text(post.commentsCount.toString()),
                               IconButton(
@@ -105,11 +142,56 @@ class PostDetailed extends StatelessWidget {
                               ),
                             ]),
                           ]),
-                      Expanded(
-                          child: Container(
-                        color: Colors.grey[350],
-                        child: Column(children: [const Text("Comments")]),
-                      ))
+                      Container(
+                          color: Colors.grey[400],
+                          child: Row(children: [
+                            Expanded(
+                                child: TextField(
+                              controller: viewModel.commentController,
+                              expands: false,
+                              decoration: const InputDecoration(
+                                  hintText: "New comment..."),
+                            )),
+                            IconButton(
+                                onPressed: () => viewModel.createComment(),
+                                icon: const Icon(Icons.send))
+                          ])),
+                      Container(
+                        color: Colors.grey[400],
+                        child: ListView.separated(
+                            shrinkWrap: true,
+                            itemBuilder: ((context, index) {
+                              var thisComment = viewModel.comments?[index];
+                              if (thisComment != null) {
+                                return Row(children: [
+                                  GestureDetector(
+                                      onTap: () => viewModel
+                                          .toUserProfile(thisComment.author),
+                                      child: Expanded(
+                                          child: Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 0, 8, 0),
+                                              color: Colors.grey[200],
+                                              child: Column(children: [
+                                                CircleAvatar(
+                                                  backgroundImage:
+                                                      Utils.getAvatar(
+                                                          thisComment.author),
+                                                ),
+                                                Text(thisComment.author.name)
+                                              ])))),
+                                  const SizedBox(width: 16),
+                                  Text(thisComment.postContent!),
+                                ]);
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            }),
+                            separatorBuilder: ((context, index) =>
+                                const Divider()),
+                            itemCount: viewModel.comments?.length ?? 0),
+                      )
                     ])));
   }
 

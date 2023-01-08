@@ -12,16 +12,16 @@ class Comment implements DbModel {
   final String postContent;
   final String? authorId;
   final String creationDate;
+  final String? postId;
   final int reactionsCount;
-  final int commentsCount;
 
   Comment(
       {required this.id,
       required this.postContent,
       this.authorId,
+      this.postId,
       required this.creationDate,
-      required this.reactionsCount,
-      required this.commentsCount});
+      required this.reactionsCount});
 
   factory Comment.fromJson(Map<String, dynamic> json) =>
       _$CommentFromJson(json);
@@ -37,15 +37,15 @@ class Comment implements DbModel {
       {String? id,
       String? postContent,
       String? authorId,
+      String? postId,
       String? creationDate,
-      int? reactionsCount,
-      int? commentsCount}) {
+      int? reactionsCount}) {
     return Comment(
         id: id ?? this.id,
         postContent: postContent ?? this.postContent,
+        postId: postId ?? this.postId,
         authorId: authorId ?? this.authorId,
         creationDate: creationDate ?? this.creationDate,
-        reactionsCount: reactionsCount ?? this.reactionsCount,
-        commentsCount: commentsCount ?? this.commentsCount);
+        reactionsCount: reactionsCount ?? this.reactionsCount);
   }
 }
