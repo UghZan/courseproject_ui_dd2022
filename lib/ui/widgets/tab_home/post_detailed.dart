@@ -29,6 +29,8 @@ class _ViewModel extends ChangeNotifier {
     asyncInit();
   }
 
+  bool isLoading = true;
+
   int _pageIndex = 0;
   set pageIndex(int newIndex) {
     _pageIndex = newIndex;
@@ -72,7 +74,7 @@ class _ViewModel extends ChangeNotifier {
     });
   }
 
-  Future removeComment(String commentId) async {
+  void removeComment(String commentId) async {
     await _api.removeComment(commentId).then((value) async {
       post!.commentsCount--;
       DB.instance.delete<Comment>(Comment.fromJson(
@@ -81,10 +83,20 @@ class _ViewModel extends ChangeNotifier {
     });
   }
 
+  void removePost() async {
+    await _api.removePost(post!.id).then((value) {
+      FocusScope.of(context).unfocus();
+      Navigator.of(context).pop();
+    });
+  }
+
   void asyncInit() async {
-    await SyncService().syncCommentsOnPost(post!.id).then((value) async =>
-        comments = await DataService().getCommentsForPost(post!.id));
-    cachedUser ??= await SharedPrefs.getStoredUser();
+    isLoading = true;
+    await SyncService().syncCommentsOnPost(post!.id).then((value) async {
+      comments = await DataService().getCommentsForPost(post!.id);
+      cachedUser ??= await SharedPrefs.getStoredUser();
+      isLoading = false;
+    });
   }
 }
 
@@ -95,10 +107,20 @@ class PostDetailed extends StatelessWidget {
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
     var post = viewModel.post;
+    if (viewModel.isLoading) {
+      return const CircularProgressIndicator();
+    }
     return post == null
         ? const SafeArea(child: Text("Failed to load post"))
-        : SafeArea(
-            child: Container(
+        : Scaffold(
+            appBar: AppBar(actions: [
+              post.author.id == viewModel.cachedUser?.id
+                  ? IconButton(
+                      onPressed: viewModel.removePost,
+                      icon: const Icon(Icons.delete_outline))
+                  : const SizedBox.shrink()
+            ]),
+            body: Container(
                 color: Colors.grey,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

@@ -35,4 +35,5 @@ abstract class ApiRepository {
 
   Future removeReactionFromPost(String postId);
   Future removeComment(String commentId);
+  Future removePost(String postId);
 }

@@ -53,4 +53,7 @@ abstract class ApiClient {
 
   @DELETE("/api/Post/RemoveComment")
   Future removeCommentFromPost(@Query("commentId") String commentId);
+
+  @DELETE("/api/Post/RemovePost")
+  Future removePost(@Query("postId") String postId);
 }
