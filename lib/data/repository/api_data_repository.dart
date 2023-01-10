@@ -78,4 +78,8 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future removeReactionFromPost(String postId) =>
       _api.removeReactionFromPost(postId);
+
+  @override
+  Future removeComment(String commentId) =>
+      _api.removeCommentFromPost(commentId);
 }

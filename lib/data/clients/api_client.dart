@@ -50,4 +50,7 @@ abstract class ApiClient {
 
   @DELETE("/api/Post/RemoveReactionFromPost")
   Future removeReactionFromPost(@Query("postId") String postId);
+
+  @DELETE("/api/Post/RemoveComment")
+  Future removeCommentFromPost(@Query("commentId") String commentId);
 }

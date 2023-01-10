@@ -2,12 +2,15 @@
 import 'package:courseproject_ui_dd2022/domain/models/comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/create_models/create_comment_model.dart';
 import 'package:courseproject_ui_dd2022/domain/models/post_model.dart';
+import 'package:courseproject_ui_dd2022/internal/shared_prefs.dart';
 import 'package:courseproject_ui_dd2022/ui/widgets/common/react_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/service/data_service.dart';
+import '../../../data/service/database.dart';
 import '../../../data/service/sync_service.dart';
+import '../../../domain/models/comment.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/app_config.dart';
 import '../../../internal/dependencies/repository_module.dart';
@@ -50,6 +53,8 @@ class _ViewModel extends ChangeNotifier {
   String? comment;
   TextEditingController commentController = TextEditingController();
 
+  User? cachedUser;
+
   List<CommentModel>? _comments;
   List<CommentModel>? get comments => _comments;
   set comments(List<CommentModel>? val) {
@@ -63,14 +68,23 @@ class _ViewModel extends ChangeNotifier {
     FocusScope.of(context).unfocus();
     await _api.createComment(post!.id, newComment).then((value) async {
       post!.commentsCount++;
-      await SyncService().syncPosts();
+      asyncInit();
+    });
+  }
+
+  Future removeComment(String commentId) async {
+    await _api.removeComment(commentId).then((value) async {
+      post!.commentsCount--;
+      DB.instance.delete<Comment>(Comment.fromJson(
+          comments!.firstWhere((element) => element.id == commentId).toJson()));
       asyncInit();
     });
   }
 
   void asyncInit() async {
-    await SyncService().syncCommentsOnPost(post!.id);
-    comments = await DataService().getCommentsForPost(post!.id);
+    await SyncService().syncCommentsOnPost(post!.id).then((value) async =>
+        comments = await DataService().getCommentsForPost(post!.id));
+    cachedUser ??= await SharedPrefs.getStoredUser();
   }
 }
 
@@ -163,27 +177,40 @@ class PostDetailed extends StatelessWidget {
                             itemBuilder: ((context, index) {
                               var thisComment = viewModel.comments?[index];
                               if (thisComment != null) {
-                                return Row(children: [
-                                  GestureDetector(
-                                      onTap: () => viewModel
-                                          .toUserProfile(thisComment.author),
-                                      child: Expanded(
-                                          child: Container(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      8, 0, 8, 0),
-                                              color: Colors.grey[200],
-                                              child: Column(children: [
-                                                CircleAvatar(
-                                                  backgroundImage:
-                                                      Utils.getAvatar(
-                                                          thisComment.author),
-                                                ),
-                                                Text(thisComment.author.name)
-                                              ])))),
-                                  const SizedBox(width: 16),
-                                  Text(thisComment.postContent!),
-                                ]);
+                                return Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      GestureDetector(
+                                          onTap: () => viewModel.toUserProfile(
+                                              thisComment.author),
+                                          child: Expanded(
+                                              child: Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          8, 0, 8, 0),
+                                                  color: Colors.grey[200],
+                                                  child: Column(children: [
+                                                    CircleAvatar(
+                                                      backgroundImage:
+                                                          Utils.getAvatar(
+                                                              thisComment
+                                                                  .author),
+                                                    ),
+                                                    Text(
+                                                        thisComment.author.name)
+                                                  ])))),
+                                      const SizedBox(width: 16),
+                                      Text(thisComment.postContent!),
+                                      viewModel.cachedUser?.id ==
+                                              thisComment.author.id
+                                          ? IconButton(
+                                              onPressed: () =>
+                                                  viewModel.removeComment(
+                                                      thisComment.id),
+                                              icon: const Icon(
+                                                  Icons.delete_outline))
+                                          : const SizedBox.shrink()
+                                    ]);
                               } else {
                                 return const SizedBox.shrink();
                               }

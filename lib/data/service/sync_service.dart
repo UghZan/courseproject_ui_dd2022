@@ -8,7 +8,7 @@ class SyncService {
   final _dataService = DataService();
 
   Future syncPosts() async {
-    _dataService.clearDB();
+    await _dataService.clearDB();
 
     var postModels = await _api.getPosts(100, 0);
     var authors = postModels.map((e) => e.author).toSet();
