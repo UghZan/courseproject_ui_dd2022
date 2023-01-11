@@ -1,8 +1,10 @@
+import 'package:courseproject_ui_dd2022/internal/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/models/user.dart';
 import '../../../internal/dependencies/repository_module.dart';
+import '../../navigation/tab_navigator.dart';
 
 class _ViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
@@ -12,9 +14,13 @@ class _ViewModel extends ChangeNotifier {
   _ViewModel({required this.context}) {
     asyncInit();
     searchTEC.addListener(() async {
-      if (searchTEC.text.isEmpty) return;
+      if (searchTEC.text.isEmpty) {
+        _users?.clear();
+        notifyListeners();
+        return;
+      }
       isLoaded = false;
-      _users = await _api.searchUsers(searchTEC.text).then((value) {
+      users = await _api.searchUsers(searchTEC.text).then((value) {
         isLoaded = true;
         return value;
       });
@@ -37,6 +43,11 @@ class _ViewModel extends ChangeNotifier {
     searchTEC.dispose();
     super.dispose();
   }
+
+  void toUserProfile(User profileUser) {
+    Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.userProfile, arguments: profileUser);
+  }
 }
 
 class UserListWidget extends StatelessWidget {
@@ -56,7 +67,23 @@ class UserListWidget extends StatelessWidget {
                   const InputDecoration(hintText: "Start writing username..."),
             ),
             viewModel.isLoaded
-                ? Text(viewModel._users?.length.toString() ?? "")
+                ? Expanded(
+                    child: ListView.builder(
+                    itemBuilder: ((context, index) {
+                      var thisUser = viewModel._users?[index];
+                      if (thisUser != null) {
+                        return ListTile(
+                          leading: GestureDetector(
+                              onTap: () => viewModel.toUserProfile(thisUser),
+                              child: CircleAvatar(
+                                  backgroundImage: Utils.getAvatar(thisUser))),
+                          title: Text(thisUser.name),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                    itemCount: viewModel._users?.length ?? 0,
+                  ))
                 : const CircularProgressIndicator()
           ],
         ));
