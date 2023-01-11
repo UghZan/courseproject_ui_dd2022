@@ -23,6 +23,7 @@ abstract class ApiRepository {
 
   Future createPost(CreatePostModel model);
   Future<List<PostModel>> getPostsForUser(String userId, int amount, int skip);
+  Future<List<User>> searchUsers(String query);
 
   Future<List<AttachModel>> uploadFiles({required List<File> files});
 

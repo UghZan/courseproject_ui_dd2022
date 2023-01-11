@@ -4,6 +4,9 @@ import 'package:courseproject_ui_dd2022/ui/widgets/tab_profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/models/user.dart';
+import '../widgets/tab_home/home.dart';
+import '../widgets/tab_post/post_creation.dart';
+import '../widgets/tab_search/user_list.dart';
 
 class TabNavigatorRoutes {
   static const String root = "/app";
@@ -18,11 +21,18 @@ class TabNavigator extends StatelessWidget {
   const TabNavigator({Key? key, required this.navKey, required this.thisTab})
       : super(key: key);
 
+  static Map<TabItemEnum, Widget> tabRoots = {
+    TabItemEnum.home: HomeWidget.create(),
+    TabItemEnum.profile: ProfileWidget.create(null),
+    TabItemEnum.newPost: PostCreateWidget.create(),
+    TabItemEnum.search: UserListWidget.create()
+  };
+
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
           {Object? arg}) =>
       {
         TabNavigatorRoutes.root: (context) =>
-            TabEnums.tabRoots[thisTab] ??
+            tabRoots[thisTab] ??
             SafeArea(
               child: Text(thisTab.name),
             ),

@@ -68,4 +68,7 @@ abstract class ApiClient {
 
   @POST("/api/User/UnsubscribeFromUser")
   Future unsubscribeFrom(@Query("targetId") String targetId);
+
+  @GET("/api/User/SearchUsers")
+  Future<List<User>> searchUsers(@Query("query") String query);
 }

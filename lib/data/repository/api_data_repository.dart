@@ -102,4 +102,7 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future unsubscribeFrom(String targetId) async =>
       _api.unsubscribeFrom(targetId);
+
+  @override
+  Future<List<User>> searchUsers(String query) async => _api.searchUsers(query);
 }

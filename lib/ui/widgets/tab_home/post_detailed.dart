@@ -98,6 +98,12 @@ class _ViewModel extends ChangeNotifier {
       isLoading = false;
     });
   }
+
+  @override
+  void dispose() {
+    commentController.dispose();
+    super.dispose();
+  }
 }
 
 class PostDetailed extends StatelessWidget {
