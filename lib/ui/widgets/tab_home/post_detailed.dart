@@ -189,7 +189,7 @@ class PostDetailed extends StatelessWidget {
                                   hintText: "New comment..."),
                             )),
                             IconButton(
-                                onPressed: () => viewModel.createComment(),
+                                onPressed: viewModel.createComment,
                                 icon: const Icon(Icons.send))
                           ])),
                       Container(

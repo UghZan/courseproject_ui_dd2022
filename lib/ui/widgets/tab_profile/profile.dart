@@ -20,6 +20,7 @@ class _ViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
   final _dataService = DataService();
   final _authService = AuthService();
+  bool isLoaded = false;
   BuildContext context;
 
   late AppViewModel appViewModel;
@@ -45,6 +46,13 @@ class _ViewModel extends ChangeNotifier {
   }
 
   bool isSelfProfile = false;
+
+  bool _isSubbedTo = false;
+  bool get isSubbedTo => _isSubbedTo;
+  set isSubbedTo(bool newSub) {
+    _isSubbedTo = newSub;
+    notifyListeners();
+  }
 
   Image? _avatar;
   Image? get avatar => _avatar;
@@ -119,14 +127,41 @@ class _ViewModel extends ChangeNotifier {
     }
   }
 
+  void handleSubscription() async {
+    isLoaded = false;
+    if (isSubbedTo) {
+      await _api.unsubscribeFrom(profileUser!.id).then((value) {
+        isSubbedTo = false;
+        profileUser!.subscribersCount--;
+        isLoaded = true;
+      });
+    } else {
+      await _api.subscribeTo(profileUser!.id).then((value) {
+        isSubbedTo = true;
+        profileUser!.subscribersCount++;
+        isLoaded = true;
+      });
+    }
+    await DataService().createOrUpdateUser(profileUser!);
+  }
+
   void asyncInit() async {
+    isLoaded = false;
+
     visitorUser = await SharedPrefs.getStoredUser();
     profileUser ??= visitorUser;
+    avatar = await getAvatar();
+
     if (visitorUser!.id == profileUser!.id) {
       isSelfProfile = true;
+      isLoaded = true;
+    } else {
+      isSubbedTo =
+          await _api.getIsSubscribedToUser(profileUser!.id).then((value) {
+        isLoaded = true;
+        return value;
+      });
     }
-
-    avatar = await getAvatar();
   }
 
   Future logout() async {
@@ -142,65 +177,84 @@ class ProfileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                          child: GestureDetector(
-                              onTap: () =>
-                                  _cameraGalleryPicker(context, viewModel),
-                              child: SizedBox(
-                                  height: size.width,
-                                  child: viewModel.avatar))),
-                      Text(
-                        viewModel.profileUser?.name ?? "",
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 36),
-                        textAlign: TextAlign.left,
-                      )
-                    ]),
-              )),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Icon(Icons.email),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(viewModel.profileUser?.email ?? "",
-                  style: const TextStyle(
-                      fontSize: 24, fontStyle: FontStyle.italic)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Icon(Icons.person),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(
-                  viewModel.profileUser == null
-                      ? ""
-                      : "User for ${DateTime.now().difference(DateTime.tryParse(viewModel.profileUser!.createDate)!).inDays} days",
-                  style: const TextStyle(
-                      fontSize: 24, fontStyle: FontStyle.italic)),
-            ],
-          ),
-          if (viewModel.isSelfProfile)
-            TextButton(onPressed: viewModel.logout, child: const Text("Logout"))
-        ],
-      ),
-    );
+    return viewModel.isLoaded
+        ? Scaffold(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                                child: GestureDetector(
+                                    onTap: () => _cameraGalleryPicker(
+                                        context, viewModel),
+                                    child: SizedBox(
+                                        height: size.width,
+                                        child: viewModel.avatar))),
+                            Text(
+                              viewModel.profileUser?.name ?? "",
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 36),
+                              textAlign: TextAlign.left,
+                            )
+                          ]),
+                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.email),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(viewModel.profileUser?.email ?? "",
+                        style: const TextStyle(
+                            fontSize: 24, fontStyle: FontStyle.italic)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.person),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                        "User for ${DateTime.now().difference(DateTime.tryParse(viewModel.profileUser!.createDate)!).inDays} days",
+                        style: const TextStyle(
+                            fontSize: 24, fontStyle: FontStyle.italic)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.group),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                        "${viewModel.profileUser!.subscribersCount} subscribers",
+                        style: const TextStyle(
+                            fontSize: 24, fontStyle: FontStyle.italic)),
+                  ],
+                ),
+                if (viewModel.isSelfProfile)
+                  TextButton(
+                      onPressed: viewModel.logout, child: const Text("Logout"))
+                else
+                  TextButton(
+                      onPressed: viewModel.handleSubscription,
+                      child: Text(
+                          viewModel.isSubbedTo ? "Unsubscribe" : "Subscribe"))
+              ],
+            ),
+          )
+        : const CircularProgressIndicator();
   }
 
   void _cameraGalleryPicker(BuildContext context, _ViewModel viewModel) {

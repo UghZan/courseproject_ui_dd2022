@@ -42,12 +42,37 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<List<PostModel>> getPosts(
+  Future<User?> getUserById(userId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'userId': userId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result =
+        await _dio.fetch<Map<String, dynamic>?>(_setStreamType<User>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/User/GetUserById',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data == null ? null : User.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<PostModel>> getPostsForUser(
+    userId,
     amount,
     skip,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'userId': userId,
       r'amount': amount,
       r'startingFrom': skip,
     };
@@ -61,7 +86,7 @@ class _ApiClient implements ApiClient {
     )
             .compose(
               _dio.options,
-              '/api/Post/GetPosts',
+              '/api/Post/GetPostsForUser',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -306,6 +331,72 @@ class _ApiClient implements ApiClient {
         .compose(
           _dio.options,
           '/api/Post/RemovePost',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<bool> getIsSubscribedToTarget(targetId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'targetId': targetId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<bool>(_setStreamType<bool>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/User/IsUserSubscribedToTarget',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data!;
+    return value;
+  }
+
+  @override
+  Future<dynamic> subscribeTo(targetId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'targetId': targetId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/User/SubscribeToUser',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<dynamic> unsubscribeFrom(targetId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'targetId': targetId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/User/UnsubscribeFromUser',
           queryParameters: queryParameters,
           data: _data,
         )

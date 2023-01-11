@@ -4,6 +4,8 @@ CREATE TABLE t_User(
     ,email              TEXT
     ,createDate         TEXT
     ,linkToAvatar       TEXT
+    ,subscribersCount   INTEGER DEFAULT 0
+    ,subscriptionsCount INTEGER DEFAULT 0
 );
 CREATE TABLE t_Post(
     id                  TEXT NOT NULL PRIMARY KEY

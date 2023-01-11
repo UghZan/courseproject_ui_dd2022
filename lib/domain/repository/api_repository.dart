@@ -17,11 +17,12 @@ abstract class ApiRepository {
   Future<TokenResponse?> refreshToken({required String token});
 
   Future<User?> getCurrentUser();
+  Future<User?> getUserById(String userId);
   Future createUser(CreateUserModel model);
   Future addAvatarForUser(AttachModel model);
 
   Future createPost(CreatePostModel model);
-  Future<List<PostModel>> getPosts(int amount, int skip);
+  Future<List<PostModel>> getPostsForUser(String userId, int amount, int skip);
 
   Future<List<AttachModel>> uploadFiles({required List<File> files});
 
@@ -36,4 +37,8 @@ abstract class ApiRepository {
   Future removeReactionFromPost(String postId);
   Future removeComment(String commentId);
   Future removePost(String postId);
+
+  Future getIsSubscribedToUser(String targetId);
+  Future subscribeTo(String targetId);
+  Future unsubscribeFrom(String targetId);
 }

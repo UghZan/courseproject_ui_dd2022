@@ -20,8 +20,11 @@ abstract class ApiClient {
   @GET("/api/User/GetCurrentUser")
   Future<User?> getCurrentUser();
 
-  @GET("/api/Post/GetPosts")
-  Future<List<PostModel>> getPosts(
+  @GET("/api/User/GetUserById")
+  Future<User?> getUserById(@Query("userId") String userId);
+
+  @GET("/api/Post/GetPostsForUser")
+  Future<List<PostModel>> getPostsForUser(@Query("userId") String userId,
       @Query("amount") int amount, @Query("startingFrom") int skip);
 
   @POST("/api/Attach/UploadFiles")
@@ -56,4 +59,13 @@ abstract class ApiClient {
 
   @DELETE("/api/Post/RemovePost")
   Future removePost(@Query("postId") String postId);
+
+  @GET("/api/User/IsUserSubscribedToTarget")
+  Future<bool> getIsSubscribedToTarget(@Query("targetId") String targetId);
+
+  @POST("/api/User/SubscribeToUser")
+  Future subscribeTo(@Query("targetId") String targetId);
+
+  @POST("/api/User/UnsubscribeFromUser")
+  Future unsubscribeFrom(@Query("targetId") String targetId);
 }

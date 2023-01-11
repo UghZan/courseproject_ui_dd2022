@@ -38,51 +38,68 @@ class ApiDataRepository extends ApiRepository {
   }
 
   @override
+  Future<User?> getUserById(String userId) async {
+    return await _api.getUserById(userId);
+  }
+
+  @override
   Future<TokenResponse?> refreshToken({required String token}) async {
     return await _auth.refreshToken(RefreshTokenRequest(token: token));
   }
 
   @override
-  Future<List<PostModel>> getPosts(int amount, int skip) =>
-      _api.getPosts(amount, skip);
+  Future<List<PostModel>> getPostsForUser(
+          String userId, int amount, int skip) async =>
+      _api.getPostsForUser(userId, amount, skip);
 
   @override
-  Future addAvatarForUser(AttachModel model) => _api.addAvatarForUser(model);
+  Future addAvatarForUser(AttachModel model) async =>
+      _api.addAvatarForUser(model);
 
   @override
-  Future<List<AttachModel>> uploadFiles({required List<File> files}) =>
+  Future<List<AttachModel>> uploadFiles({required List<File> files}) async =>
       _api.uploadFiles(files: files);
 
   @override
-  Future createUser(CreateUserModel model) => _auth.createUser(model);
+  Future createUser(CreateUserModel model) async => _auth.createUser(model);
 
   @override
-  Future createPost(CreatePostModel model) => _api.createPost(model);
+  Future createPost(CreatePostModel model) async => _api.createPost(model);
 
   @override
-  Future createComment(String postId, CreateCommentModel model) =>
+  Future createComment(String postId, CreateCommentModel model) async =>
       _api.createComment(postId, model);
 
   @override
-  Future<List<CommentModel>> getPostComments(String postId) =>
+  Future<List<CommentModel>> getPostComments(String postId) async =>
       _api.getPostComments(postId);
 
   @override
-  Future createReactionOnPost(String postId, CreateReactionModel model) =>
+  Future createReactionOnPost(String postId, CreateReactionModel model) async =>
       _api.createReactionOnPost(postId, model);
 
   @override
-  Future<int> getUserReactionOnPost(String postId) =>
+  Future<int> getUserReactionOnPost(String postId) async =>
       _api.getUserReactionOnPost(postId);
 
   @override
-  Future removeReactionFromPost(String postId) =>
+  Future removeReactionFromPost(String postId) async =>
       _api.removeReactionFromPost(postId);
 
   @override
-  Future removeComment(String commentId) =>
+  Future removeComment(String commentId) async =>
       _api.removeCommentFromPost(commentId);
 
   @override
-  Future removePost(String postId) => _api.removePost(postId);
+  Future removePost(String postId) async => _api.removePost(postId);
+
+  @override
+  Future getIsSubscribedToUser(String targetId) async =>
+      _api.getIsSubscribedToTarget(targetId);
+
+  @override
+  Future subscribeTo(String targetId) async => _api.subscribeTo(targetId);
+  @override
+  Future unsubscribeFrom(String targetId) async =>
+      _api.unsubscribeFrom(targetId);
 }

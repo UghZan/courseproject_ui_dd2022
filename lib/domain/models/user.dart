@@ -12,14 +12,17 @@ class User implements DbModel {
   String email;
   String createDate;
   String? linkToAvatar;
+  int subscribersCount;
+  int subscriptionsCount;
 
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.createDate,
-    this.linkToAvatar,
-  });
+  User(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.createDate,
+      this.linkToAvatar,
+      required this.subscribersCount,
+      required this.subscriptionsCount});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
