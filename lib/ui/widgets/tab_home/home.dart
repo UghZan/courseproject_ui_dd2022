@@ -49,8 +49,11 @@ class HomeViewModel extends ChangeNotifier {
 
   void refresh() async {
     isLoading = true;
-    await SyncService().syncPosts().then((value) => isLoading = false);
-    posts = await _dataService.getPosts();
+    posts?.clear();
+    await SyncService().syncPosts().then((value) async {
+      posts = await _dataService.getPosts();
+      isLoading = false;
+    });
   }
 
   void toUserProfile(User profileUser) {
@@ -158,7 +161,7 @@ class HomeWidget extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            ReactButtonWidget.create(
+                                            PostReactButtonWidget.create(
                                                 context, thisPost),
                                             Row(children: [
                                               Text(thisPost.commentsCount

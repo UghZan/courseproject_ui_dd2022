@@ -105,4 +105,17 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future<List<User>> searchUsers(String query) async => _api.searchUsers(query);
+
+  @override
+  Future createReactionOnComment(
+          String commentId, CreateReactionModel model) async =>
+      _api.createReactionOnComment(commentId, model);
+
+  @override
+  Future<int> getUserReactionOnComment(String commentId) async =>
+      _api.getUserReactionOnComment(commentId);
+
+  @override
+  Future removeReactionFromComment(String commentId) async =>
+      _api.removeReactionFromComment(commentId);
 }

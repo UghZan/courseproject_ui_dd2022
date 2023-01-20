@@ -7,12 +7,12 @@ part 'comment_model.g.dart';
 
 @JsonSerializable()
 class CommentModel {
-  final String id;
-  final String? postContent;
-  final User author;
-  final String creationDate;
-  final int reactionsCount;
-  final String? postId;
+  String id;
+  String? postContent;
+  User author;
+  String creationDate;
+  int reactionsCount;
+  String? postId;
 
   CommentModel(
       {required this.id,

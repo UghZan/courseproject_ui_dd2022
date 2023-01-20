@@ -175,7 +175,7 @@ class PostDetailed extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ReactButtonWidget.create(context, post),
+                            PostReactButtonWidget.create(context, post),
                             Row(children: [
                               Text(post.commentsCount.toString()),
                               IconButton(
@@ -237,7 +237,9 @@ class PostDetailed extends StatelessWidget {
                                                       thisComment.id),
                                               icon: const Icon(
                                                   Icons.delete_outline))
-                                          : const SizedBox.shrink()
+                                          : const SizedBox.shrink(),
+                                      CommentReactButtonWidget.create(
+                                          context, thisComment)
                                     ]);
                               } else {
                                 return const SizedBox.shrink();

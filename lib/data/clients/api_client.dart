@@ -48,6 +48,16 @@ abstract class ApiClient {
   Future createReactionOnPost(
       @Query("postId") String postId, @Body() CreateReactionModel model);
 
+  @GET("/api/Post/GetCurrentUserCommentReaction")
+  Future<int> getUserReactionOnComment(@Query("commentId") String commentId);
+
+  @POST("/api/Post/CreateReactionOnComment")
+  Future createReactionOnComment(
+      @Query("commentId") String commentId, @Body() CreateReactionModel model);
+
+  @DELETE("/api/Post/RemoveReactionFromComment")
+  Future removeReactionFromComment(@Query("commentId") String commentId);
+
   @GET("/api/Post/GetCurrentUserPostReaction")
   Future<int> getUserReactionOnPost(@Query("postId") String postId);
 

@@ -32,10 +32,13 @@ abstract class ApiRepository {
   Future<List<CommentModel>> getPostComments(String postId);
 
   Future createReactionOnPost(String postId, CreateReactionModel model);
+  Future createReactionOnComment(String commentId, CreateReactionModel model);
 
   Future<int> getUserReactionOnPost(String postId);
+  Future<int> getUserReactionOnComment(String commentId);
 
   Future removeReactionFromPost(String postId);
+  Future removeReactionFromComment(String commentId);
   Future removeComment(String commentId);
   Future removePost(String postId);
 

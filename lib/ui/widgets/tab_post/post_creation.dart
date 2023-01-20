@@ -40,9 +40,16 @@ class _ViewModel extends ChangeNotifier {
     isCreating = true;
     await _api.createPost(newPost).then((value) {
       FocusScope.of(context).unfocus();
+      reset();
       appViewModel.selectTab(TabItemEnum.home);
       appViewModel.msg = "New post successfully created";
+      isCreating = false;
     });
+  }
+
+  void reset() {
+    postController.text = "";
+    postAttachments?.clear();
   }
 
   Future<void> addAttachment(bool camera) async {
